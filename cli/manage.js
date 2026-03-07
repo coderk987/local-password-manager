@@ -2,8 +2,11 @@ import db from "../db/connect.js";
 import prompt from "prompt";
 import showMenu from "./menu.js";
 import clipboard from 'clipboardy';
+import chalk from "chalk";
+import decryptPassword from '../utils/decrypt.js';
 
 async function managePassword() {
+    console.log(chalk.bold('-----------[MANAGE]-----------'))
     console.log("1. Copy a Password");
     console.log("2. Delete a Password");
 
@@ -11,26 +14,24 @@ async function managePassword() {
             name: 'option',
             description: 'Choose an Option(1-2): ',
             required: true,
-            pattern: /^[123]$/,
-            message: 'Please choose from 1-2'
+            pattern: /^[12]$/,
+            message: chalk.red('Please choose from 1-2')
         }
     
     let {option} = await prompt.get(question);
-    let result;
     let {source} = await prompt.get({name: "source", description: "Enter the source: "});
-    const doc = await db.collection("passwords").findOne({ _id: source });
+    const doc = await db.collection("passwords").findOne({ __id: source });
     if(!doc){
         console.log("This Source doesnt Exist");
-        managePassword();
-    }
-
-    if(option==1){
-        clipboard.writeSync(doc.value);
-        console.log("Copied Password to Clipboard");
+    }else if(option==1){
+        clipboard.writeSync(decryptPassword(doc.value));
+        console.log(chalk.green("Copied Password to Clipboard"));
     }else if(option==2){
         await db.collection("passwords").deleteOne({ _id: source });
+        console.log(chalk.green("Succesfully Deleted."));
     }
 
-    printRes(result);
     showMenu();
 }
+
+export default managePassword;

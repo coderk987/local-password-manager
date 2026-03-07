@@ -1,17 +1,24 @@
-import db from "../db/connect";
+import db from "../db/connect.js";
 import prompt from "prompt";
-import showMenu from "./menu";
+import showMenu from "./menu.js";
+import chalk from "chalk";
 
 function printRes(res){
+    if(res.length===0){
+        console.log(chalk.red("NOTHING FOUND"));
+        return;
+    }
+    console.log(chalk.bold('-----------[LIST]-----------'))
     let i=1;
     for(let doc of res){
         let tags = doc.tags.join(', ');
-        console.log(`${i}. ${doc.source}: ${tags}`);
+        console.log(`${i}. ${doc.__id}: ${tags}`);
         i++;
     }
 }
 
 async function searchSource() {
+    console.log(chalk.bold('-----------[SEARCH]-----------'))
     console.log("1. View All Sources");
     console.log("2. Search by Source");
     console.log("3. Search by Tags");
@@ -21,7 +28,7 @@ async function searchSource() {
             description: 'Choose an Option(1-3): ',
             required: true,
             pattern: /^[123]$/,
-            message: 'Please choose from 1-3'
+            message: chalk.red('Please choose from 1-3')
         }
     
     let {option} = await prompt.get(question);

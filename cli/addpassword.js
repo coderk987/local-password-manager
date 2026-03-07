@@ -1,8 +1,12 @@
 import crypto from "crypto";
 import db from "../db/connect.js";
 import prompt from "prompt";
+import showMenu from "./menu.js";
+import chalk from "chalk";
+import encryptPassword from '../utils/encrypt.js';
 
 async function addPassword(){
+    console.log(chalk.bold('-----------[ADD]-----------'))
     let {source} = await prompt.get({
             name: "source",
             description: "What is this password for",
@@ -26,7 +30,7 @@ async function addPassword(){
     try{
         await db.collection("passwords").updateOne(
             {__id: source},
-            { $set: {value: password, tags: tagsList}},
+            { $set: {value: encryptPassword(password), tags: tagsList}},
             { upsert: true }
         )
     }catch(err){
