@@ -8,7 +8,7 @@ import session from "../utils/session.js";
 import crypto from "crypto";
 
 function deriveKey(password, salt, size) {
-  return crypto.scryptSync(password, salt, size);
+    return crypto.scryptSync(password, salt, size);
 }
 
 async function setNewPassword(){
@@ -26,15 +26,15 @@ async function setNewPassword(){
     while(!strength){
         res = await prompt.get(question);
         strength = strengthTest(res.password);
-        strength = true;
     }
     
     try{
-        session.key = deriveKey(res.password, 12, 32);
-        session.iv = deriveKey(res.password.split('').reverse().join(''), 12, 12);
+        const salt = crypto.randomBytes(16);
+        session.key = deriveKey(res.password, salt, 32);
         await db.collection("auth").insertOne({
             type: "auth",
-            password: hashSync(res.password, 10)
+            password: hashSync(res.password, 10),
+            salt: salt
         })
         showMenu();
     }catch(err){

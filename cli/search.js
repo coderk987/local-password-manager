@@ -12,7 +12,7 @@ function printRes(res){
     let i=1;
     for(let doc of res){
         let tags = doc.tags.join(', ');
-        console.log(`${i}. ${doc.__id}: ${tags}`);
+        console.log(`${i}. ${doc._id}: ${tags}`);
         i++;
     }
 }
@@ -37,7 +37,7 @@ async function searchSource() {
         result = await db.collection('passwords').find({}).toArray();
     }else if(option==2){
         let {search} = await prompt.get({name: "search", description: "Enter search term: "});
-        result = await db.collection('passwords').find({__id: {$regex: search, $options: "i"}}).toArray();
+        result = await db.collection('passwords').find({_id: {$regex: search, $options: "i"}}).toArray();
     }else if(option==3){
         let {tag} = await prompt.get({name: "tag", description: "Enter Tag: "});
         result = await db.collection('passwords').find({tags: {$in: [tag]}}).toArray();

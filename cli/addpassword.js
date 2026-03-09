@@ -28,9 +28,10 @@ async function addPassword(){
     let tagsList = tags.replaceAll(' ', '').split(',');
 
     try{
+        let iv = crypto.randomBytes(16);
         await db.collection("passwords").updateOne(
-            {__id: source},
-            { $set: {value: encryptPassword(password), tags: tagsList}},
+            {_id: source},
+            { $set: {value: encryptPassword(password, iv), tags: tagsList, iv: iv.toString('hex')}},
             { upsert: true }
         )
     }catch(err){

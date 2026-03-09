@@ -1,11 +1,11 @@
-import session from './session';
+import session from './session.js';
 import crypto from "crypto";
 
-function decryptPassword(password) {
+function decryptPassword(password, iv) {
   const decipher = crypto.createDecipheriv(
-    "aes-256-gcm",
+    "aes256",
     session.key,
-    Buffer.from(session.iv, "hex")
+    Buffer.from(iv, "hex")
   );
 
   let decrypted = decipher.update(password, "hex", "utf8");

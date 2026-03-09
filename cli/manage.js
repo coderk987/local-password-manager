@@ -20,11 +20,11 @@ async function managePassword() {
     
     let {option} = await prompt.get(question);
     let {source} = await prompt.get({name: "source", description: "Enter the source: "});
-    const doc = await db.collection("passwords").findOne({ __id: source });
+    const doc = await db.collection("passwords").findOne({ _id: source });
     if(!doc){
         console.log("This Source doesnt Exist");
     }else if(option==1){
-        clipboard.writeSync(decryptPassword(doc.value));
+        clipboard.writeSync(decryptPassword(doc.value, doc.iv));
         console.log(chalk.green("Copied Password to Clipboard"));
     }else if(option==2){
         await db.collection("passwords").deleteOne({ _id: source });

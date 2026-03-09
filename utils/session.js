@@ -1,6 +1,6 @@
-store = {
+let session = {
     key: null,
     iv: null
 };
 
-export default store;
+export default session;
