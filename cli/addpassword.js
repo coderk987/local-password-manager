@@ -14,7 +14,7 @@ async function addPassword(){
             message: "Please enter a valid Source"
     });
 
-    let {password} = await prompt.get({name: "password", description: "Enter your Password(type 'gen' for a random password): "});
+    let {password} = await prompt.get({name: "password", description: "Enter your Password(type 'gen' for a random password)"});
     if(password=="gen"){
         const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
         password = "";
